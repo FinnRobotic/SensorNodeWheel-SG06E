@@ -6,7 +6,7 @@ This repository contains C code for reading various sensors including:
 - Strain Gauges
 - Damper Displacement Sensor
 
-The firmware is designed to run on the SENSOR_BOARD_WHEEL_DMA platform and leverages DMA for efficient data handling.
+The firmware is designed to run on the STM32IDE and leverages DMA for efficient data handling.
 
 ## Features
 - Real-time sensor data acquisition
