@@ -32,7 +32,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define ADC_BUF_SIZE_DMS		12
+#define ADC_BUF_SIZE_DMS		6
 #define ADC_BUF_SIZE_DAMPER		1
 
 /* USER CODE END PD */
@@ -58,29 +58,18 @@ TIM_HandleTypeDef htim3;
 
 /* Volatile Variables */
 
-volatile uint16_t CH7_PULL_PIPE_1 = 0;
+volatile uint16_t CH1_PULL_PIPE_1 = 0;
 
-volatile uint16_t CH8_PULL_PIPE_2 = 0;
+volatile uint16_t CH2_PULL_PIPE_2 = 0;
 
-volatile uint16_t CH11_PULL_PIPE_3 = 0;
+volatile uint16_t CH3_PULL_PIPE_3 = 0;
 
-volatile uint16_t CH12_PULL_PIPE_4 = 0;
+volatile uint16_t CH4_PULL_PIPE_4 = 0;
 
-volatile uint16_t CH1_TORSION_PIPE_1 = 0;
+volatile uint16_t CH5_PULL_PIPE_5 = 0;
 
-volatile uint16_t CH2_TORSION_PIPE_2 = 0;
+volatile uint16_t CH6_PULL_PIPE_6 = 0;
 
-volatile uint16_t CH3_TORSION_PIPE_3 = 0;
-
-volatile uint16_t CH4_TORSION_PIPE_4 = 0;
-
-volatile uint16_t CH14_PULL_PIPE_5 = 0;
-
-volatile uint16_t CH5_TORSION_PIPE_5 = 0;
-
-volatile uint16_t CH15_PULL_PIPE_6 = 0;
-
-volatile uint16_t CH6_TORSION_PIPE_6 = 0;
 
 
 
@@ -202,29 +191,17 @@ int main(void)
 
 		  ConvComplt_ADC1 = 0;
 
-		  CH1_TORSION_PIPE_1 = rawValues_DMS[1];
+		  CH1_PULL_PIPE_1 = rawValues_DMS[0];
 
-		  CH2_TORSION_PIPE_2 = rawValues_DMS[2];
+		  CH2_PULL_PIPE_2 = rawValues_DMS[1];
 
-		  CH3_TORSION_PIPE_3 = rawValues_DMS[3];
+		  CH3_PULL_PIPE_3 = rawValues_DMS[2];
 
-		  CH4_TORSION_PIPE_4 = rawValues_DMS[4];
+		  CH4_PULL_PIPE_4 = rawValues_DMS[3];
 
-		  CH5_TORSION_PIPE_5 = rawValues_DMS[5];
+		  CH5_PULL_PIPE_5 = rawValues_DMS[4];
 
-		  CH6_TORSION_PIPE_6 = rawValues_DMS[6];
-
-		  CH7_PULL_PIPE_1 = rawValues_DMS[7];
-
-		  CH8_PULL_PIPE_2 = rawValues_DMS[8];
-
-		  CH11_PULL_PIPE_3 = rawValues_DMS[9];
-
-		  CH12_PULL_PIPE_4 = rawValues_DMS[10];
-
-		  CH14_PULL_PIPE_5 = rawValues_DMS[11];
-
-		  CH15_PULL_PIPE_6 = rawValues_DMS[12];
+		  CH6_PULL_PIPE_6 = rawValues_DMS[5];
 
 		  HAL_ADC_Start_DMA(&hadc1, rawValues_DMS, ADC_BUF_SIZE_DMS);
 
@@ -319,7 +296,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
-  hadc1.Init.NbrOfConversion = 12;
+  hadc1.Init.NbrOfConversion = 6;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T3_TRGO;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
@@ -393,60 +370,6 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_6;
   sConfig.Rank = ADC_REGULAR_RANK_6;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_7;
-  sConfig.Rank = ADC_REGULAR_RANK_7;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_8;
-  sConfig.Rank = ADC_REGULAR_RANK_8;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_11;
-  sConfig.Rank = ADC_REGULAR_RANK_9;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_12;
-  sConfig.Rank = ADC_REGULAR_RANK_10;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_14;
-  sConfig.Rank = ADC_REGULAR_RANK_11;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_15;
-  sConfig.Rank = ADC_REGULAR_RANK_12;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
