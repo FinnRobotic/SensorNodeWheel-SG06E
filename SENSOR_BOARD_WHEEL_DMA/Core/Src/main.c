@@ -32,7 +32,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define ADC_BUF_SIZE_DMS		6
+#define ADC_BUF_SIZE_DMS		8
 #define ADC_BUF_SIZE_DAMPER		1
 
 /* USER CODE END PD */
@@ -69,6 +69,10 @@ volatile uint16_t CH4_PULL_PIPE_4 = 0;
 volatile uint16_t CH5_PULL_PIPE_5 = 0;
 
 volatile uint16_t CH6_PULL_PIPE_6 = 0;
+
+volatile uint16_t CH7__TORSION_1 = 0;
+
+volatile uint16_t CH8_TORSION2 = 0;
 
 
 
@@ -166,9 +170,9 @@ int main(void)
 
   HAL_ADCEx_Calibration_Start(&hadc2, ADC_SINGLE_ENDED);
 
-  HAL_ADC_Start_DMA(&hadc1, rawValues_DMS, ADC_BUF_SIZE_DMS);
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&rawValues_DMS, ADC_BUF_SIZE_DMS);
 
-  HAL_ADC_Start_DMA(&hadc2, rawValues_DAMPER, ADC_BUF_SIZE_DAMPER);
+  HAL_ADC_Start_DMA(&hadc2, (uint32_t*)&rawValues_DAMPER, ADC_BUF_SIZE_DAMPER);
 
   HAL_TIM_Base_Start(&htim3);
 
@@ -203,8 +207,9 @@ int main(void)
 
 		  CH6_PULL_PIPE_6 = rawValues_DMS[5];
 
-		  HAL_ADC_Start_DMA(&hadc1, rawValues_DMS, ADC_BUF_SIZE_DMS);
+		  CH7_TORSION_1 = rawValues_DMS[6];
 
+		  CH8_TORSION_2 = rawValues_DMS[6];
 
 	  }
 
@@ -214,7 +219,6 @@ int main(void)
 
 	  		ADC2_DAMPER = rawValues_DAMPER[1];
 
-	  		HAL_ADC_Start_DMA(&hadc2, rawValues_DAMPER, ADC_BUF_SIZE_DAMPER);
 
 	  }
 
@@ -296,11 +300,11 @@ static void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
-  hadc1.Init.NbrOfConversion = 6;
+  hadc1.Init.NbrOfConversion = 8;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T3_TRGO;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
   hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc1.Init.OversamplingMode = DISABLE;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
@@ -370,6 +374,24 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_6;
   sConfig.Rank = ADC_REGULAR_RANK_6;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Rank = ADC_REGULAR_RANK_7;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_8;
+  sConfig.Rank = ADC_REGULAR_RANK_8;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -633,15 +655,15 @@ static void MX_GPIO_Init(void)
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 	{
 		if(hadc == &hadc1) {
+
 			ConvComplt_ADC1 = 1;
 
-			HAL_ADC_Stop_DMA(&hadc1);
 		}
 
 		if(hadc == &hadc2) {
+
 			ConvComplt_ADC2 = 1;
 
-			HAL_ADC_Stop_DMA(&hadc2);
 		}
 
 	}
